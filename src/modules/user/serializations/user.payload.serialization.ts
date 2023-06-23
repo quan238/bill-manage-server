@@ -26,10 +26,13 @@ export class UserPayloadPermissionSerialization {
     action: string;
 }
 
-export class UserPayloadSerialization extends OmitType(
-    UserProfileSerialization,
-    ['photo', 'role', 'signUpDate', 'createdAt', 'updatedAt'] as const
-) {
+export class UserPayloadSerialization extends OmitType(UserProfileSerialization, [
+    'photo',
+    'role',
+    'signUpDate',
+    'createdAt',
+    'updatedAt',
+] as const) {
     @ApiHideProperty()
     @Exclude()
     readonly photo?: AwsS3Serialization;
@@ -41,7 +44,7 @@ export class UserPayloadSerialization extends OmitType(
         required: true,
         nullable: false,
     })
-    @Transform(({ obj }) => `${obj.role._id}`)
+    @Transform(({ obj }) => obj.role?._id ? obj.role._id : obj.role)
     readonly role: string;
 
     @ApiProperty({
@@ -62,7 +65,10 @@ export class UserPayloadSerialization extends OmitType(
         nullable: false,
     })
     @Transform(({ obj }) => {
-        return obj.role.permissions.map(({ action, subject }: IPolicyRule) => {
+        const permission = obj.role?.permissions
+            ? obj.role.permissions
+            : obj.permissions;
+        return permission.map(({ action, subject }: IPolicyRule) => {
             const ac = action.map(
                 (l) => ENUM_POLICY_REQUEST_ACTION[l.toUpperCase()]
             );
