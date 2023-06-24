@@ -7,6 +7,8 @@ import { RoleModule } from 'src/modules/role/role.module';
 import { SettingAdminController } from 'src/common/setting/controllers/setting.admin.controller';
 import { UserAdminController } from 'src/modules/user/controllers/user.admin.controller';
 import { UserModule } from 'src/modules/user/user.module';
+import { CustomerAdminController } from 'src/modules/customer/controllers';
+import { CustomerModule } from 'src/modules/customer/customer.module';
 
 @Module({
     controllers: [
@@ -14,9 +16,10 @@ import { UserModule } from 'src/modules/user/user.module';
         ApiKeyAdminController,
         RoleAdminController,
         UserAdminController,
+        CustomerAdminController,
     ],
     providers: [],
     exports: [],
-    imports: [ApiKeyModule, RoleModule, UserModule, AuthModule],
+    imports: [ApiKeyModule, RoleModule, UserModule, AuthModule, CustomerModule],
 })
 export class RoutesAdminModule {}

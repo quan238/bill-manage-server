@@ -44,10 +44,10 @@ export interface IResponsePagingPagination {
     total: number;
 }
 
-export interface IResponsePaging {
+export interface IResponsePaging<T> {
     _metadata?: IResponseMetadata;
     _pagination: IResponsePagingPagination;
-    data: Record<string, any>[];
+    data: T[];
 }
 
 export interface IResponseFile {

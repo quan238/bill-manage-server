@@ -139,7 +139,7 @@ export class UserAdminController {
         inactivePermanent: Record<string, any>,
         @PaginationQueryFilterEqualObjectId('role')
         role: Record<string, any>
-    ): Promise<IResponsePaging> {
+    ): Promise<IResponsePaging<IUserEntity>> {
         const find: Record<string, any> = {
             ..._search,
             ...isActive,

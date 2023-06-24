@@ -52,7 +52,7 @@ export class ResponsePagingInterceptor<T>
     ): Promise<Observable<Promise<ResponsePagingSerialization>>> {
         if (context.getType() === 'http') {
             return next.handle().pipe(
-                map(async (res: Promise<IResponsePaging>) => {
+                map(async (res: Promise<IResponsePaging<any>>) => {
                     const ctx: HttpArgumentsHost = context.switchToHttp();
                     const response: Response = ctx.getResponse();
                     const request: IRequestApp = ctx.getRequest<IRequestApp>();
@@ -102,7 +102,7 @@ export class ResponsePagingInterceptor<T>
                     };
 
                     // response
-                    const responseData = (await res) as IResponsePaging;
+                    const responseData = (await res) as IResponsePaging<any>;
                     if (!responseData) {
                         throw new Error('Paging must have response');
                     }

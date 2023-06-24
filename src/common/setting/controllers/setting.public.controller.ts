@@ -56,7 +56,7 @@ export class SettingPublicController {
             SETTING_DEFAULT_AVAILABLE_ORDER_BY
         )
         { _search, _limit, _offset, _order }: PaginationListDto
-    ): Promise<IResponsePaging> {
+    ): Promise<IResponsePaging<SettingEntity>> {
         const find: Record<string, any> = {
             ..._search,
         };

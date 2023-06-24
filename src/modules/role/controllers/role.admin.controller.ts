@@ -109,7 +109,7 @@ export class RoleAdminController {
         isActive: Record<string, any>,
         @PaginationQueryFilterInEnum('type', ROLE_DEFAULT_TYPE, ENUM_ROLE_TYPE)
         type: Record<string, any>
-    ): Promise<IResponsePaging> {
+    ): Promise<IResponsePaging<RoleEntity>> {
         const find: Record<string, any> = {
             ..._search,
             ...isActive,

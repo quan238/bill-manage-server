@@ -117,7 +117,7 @@ export class ApiKeyAdminController {
             ENUM_API_KEY_TYPE
         )
         type: Record<string, any>
-    ): Promise<IResponsePaging> {
+    ): Promise<IResponsePaging<ApiKeyEntity>> {
         const find: Record<string, any> = {
             ..._search,
             ...isActive,
