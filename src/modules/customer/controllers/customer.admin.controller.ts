@@ -1,9 +1,12 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, ConflictException, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CustomerService } from '../services';
 import { CustomerEntity } from '../repository';
 import { PaginationListDto } from 'src/common/pagination/dtos/pagination.list.dto';
-import { IResponsePaging } from 'src/common/response/interfaces/response.interface';
+import {
+    IResponse,
+    IResponsePaging,
+} from 'src/common/response/interfaces/response.interface';
 import { PaginationService } from 'src/common/pagination/services/pagination.service';
 import { AuthJwtAdminAccessProtected } from 'src/common/auth/decorators/auth.jwt.decorator';
 import {
@@ -19,6 +22,7 @@ import {
     CUSTOMER_DEFAULT_ORDER_DIRECTION,
     CUSTOMER_DEFAULT_PER_PAGE,
 } from '../constants/customer.list';
+import { CustomerCreateDto } from '../dtos';
 
 @ApiTags('modules.admin.customer')
 @Controller({
@@ -70,6 +74,33 @@ export class CustomerAdminController {
         return {
             _pagination: { total, totalPage },
             data: customers,
+        };
+    }
+
+    @PolicyAbilityProtected({
+        subject: ENUM_POLICY_SUBJECT.USER,
+        action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.CREATE],
+    })
+    @AuthJwtAdminAccessProtected()
+    @Post('/create')
+    async create(@Body() body: CustomerCreateDto): Promise<IResponse> {
+        const { customerId } = body;
+
+        const exist: boolean = await this.customerService.existByCustomerId(
+            customerId
+        );
+
+        if (exist) {
+            throw new ConflictException({
+                // statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
+                message: 'role.error.exist',
+            });
+        }
+
+        const create = await this.customerService.create(body);
+
+        return {
+            data: { _id: create._id },
         };
     }
 }

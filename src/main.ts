@@ -47,12 +47,8 @@ async function bootstrap() {
     // Listen
     await app.listen(port, host);
 
-    logger.log(`==========================================================`);
-
     logger.log(`Environment Variable`, 'NestApplication');
     logger.log(JSON.parse(JSON.stringify(process.env)), 'NestApplication');
-
-    logger.log(`==========================================================`);
 
     logger.log(`Job is ${jobEnable}`, 'NestApplication');
     logger.log(
@@ -68,7 +64,5 @@ async function bootstrap() {
         'NestApplication'
     );
     logger.log(`Database uri ${databaseUri}`, 'NestApplication');
-
-    logger.log(`==========================================================`);
 }
 bootstrap();

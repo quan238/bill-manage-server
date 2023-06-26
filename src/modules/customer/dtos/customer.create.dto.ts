@@ -1,8 +1,15 @@
 import { faker } from '@faker-js/faker';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsOptional, IsString, MaxLength, MinLength, ValidateIf } from 'class-validator';
-import { MobileNumberAllowed } from 'src/common/request/validations/request.mobile-number-allowed.validation';
+import {
+    IsNotEmpty,
+    IsOptional,
+    IsString,
+    MaxLength,
+    MinLength,
+    ValidateIf,
+} from 'class-validator';
+// import { MobileNumberAllowed } from 'src/common/request/validations/request.mobile-number-allowed.validation';
 
 export class CustomerCreateDto {
     @ApiProperty({
@@ -37,8 +44,7 @@ export class CustomerCreateDto {
     @MaxLength(14)
     @ValidateIf((e) => e.mobileNumber !== '')
     @Type(() => String)
-    @MobileNumberAllowed()
-    readonly phoneNumer: string;
+    readonly phoneNumber: string;
 
     @ApiProperty({
         example: faker.address.streetAddress(),

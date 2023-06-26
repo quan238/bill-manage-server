@@ -1,4 +1,5 @@
 import {
+    IDatabaseExistOptions,
     IDatabaseFindAllOptions,
     IDatabaseGetTotalOptions,
 } from 'src/common/database/interfaces/database.interface';
@@ -13,4 +14,8 @@ export interface ICustomerService {
         find?: Record<string, any>,
         options?: IDatabaseGetTotalOptions
     ): Promise<number>;
+    existByCustomerId(
+        name: string,
+        options?: IDatabaseExistOptions
+    ): Promise<boolean>;
 }
