@@ -1,0 +1,13 @@
+{
+    "list": "List Role Success.",
+    "get": "Get Role Success.",
+    "create": "Create Succeed",
+    "update": "Update Succeed",
+    "delete": "Delete Succeed",
+    "inactive": "Inactive Succeed",
+    "active": "Active Succeed",
+    "error": {
+        "customerExist": "Customer has already exist.",
+        "notFound": "Customer not found."
+    }
+}

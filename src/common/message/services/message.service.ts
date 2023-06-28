@@ -82,7 +82,6 @@ export class MessageService implements IMessageService {
             }
 
             const errors: IErrors[] = [];
-            console.log(this.get(`request`));
             for (const constraint of constraints) {
                 errors.push({
                     property,

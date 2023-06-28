@@ -42,7 +42,7 @@ export class CustomerCreateDto {
     @IsOptional()
     @MinLength(10)
     @MaxLength(14)
-    @ValidateIf((e) => e.mobileNumber !== '')
+    @ValidateIf((e) => e.phoneNumber !== '')
     @Type(() => String)
     readonly phoneNumber: string;
 

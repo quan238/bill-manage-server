@@ -9,6 +9,7 @@
     "isLowercase": "{property} should be lowercase.",
     "isOptional": "{property} is optional.",
     "isPositive": "{property} should be a positive number.",
+    "isUuid": "{property} should be a valid uuid.",
     "isEmail": "{property} should be a type of email.",
     "isInt": "{property} should be a number.",
     "isNumberString": "{property} should be a number.",

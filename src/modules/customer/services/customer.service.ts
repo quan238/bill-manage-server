@@ -5,9 +5,11 @@ import {
     IDatabaseCreateOptions,
     IDatabaseExistOptions,
     IDatabaseFindAllOptions,
+    IDatabaseFindOneOptions,
     IDatabaseGetTotalOptions,
+    IDatabaseSaveOptions,
 } from 'src/common/database/interfaces/database.interface';
-import { CustomerCreateDto } from '../dtos';
+import { CustomerCreateDto, CustomerUpdateValueDto } from '../dtos';
 
 @Injectable()
 export class CustomerService implements ICustomerService {
@@ -20,11 +22,30 @@ export class CustomerService implements ICustomerService {
         return this.customerRepository.findAll<CustomerEntity>(find, options);
     }
 
+    async findOneById(
+        _id: string,
+        options?: IDatabaseFindOneOptions
+    ): Promise<CustomerDoc> {
+        return this.customerRepository.findOneById<CustomerDoc>(_id, options);
+    }
+
     async getTotal(
         find?: Record<string, any>,
         options?: IDatabaseGetTotalOptions
     ): Promise<number> {
         return this.customerRepository.getTotal(find, options);
+    }
+
+    async existById(
+        id: string,
+        options?: IDatabaseExistOptions
+    ): Promise<boolean> {
+        return this.customerRepository.exists(
+            {
+                _id: id,
+            },
+            { ...options, withDeleted: true }
+        );
     }
 
     async existByCustomerId(
@@ -33,10 +54,22 @@ export class CustomerService implements ICustomerService {
     ): Promise<boolean> {
         return this.customerRepository.exists(
             {
-                id: customerId,
+                customerId,
             },
             { ...options, withDeleted: true }
         );
+    }
+
+    async updateValue(
+        repository: CustomerDoc,
+        { name, address, phoneNumber }: CustomerUpdateValueDto,
+        options?: IDatabaseSaveOptions
+    ): Promise<CustomerDoc> {
+        repository.name = name;
+        repository.address = address;
+        repository.phoneNumber = phoneNumber;
+
+        return this.customerRepository.save(repository, options);
     }
 
     async create(

@@ -1,7 +1,14 @@
-import { Body, ConflictException, Controller, Get, Post } from '@nestjs/common';
+import {
+    Body,
+    ConflictException,
+    Controller,
+    Get,
+    Post,
+    Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CustomerService } from '../services';
-import { CustomerEntity } from '../repository';
+import { CustomerDoc, CustomerEntity } from '../repository';
 import { PaginationListDto } from 'src/common/pagination/dtos/pagination.list.dto';
 import {
     IResponse,
@@ -9,11 +16,6 @@ import {
 } from 'src/common/response/interfaces/response.interface';
 import { PaginationService } from 'src/common/pagination/services/pagination.service';
 import { AuthJwtAdminAccessProtected } from 'src/common/auth/decorators/auth.jwt.decorator';
-import {
-    ENUM_POLICY_ACTION,
-    ENUM_POLICY_SUBJECT,
-} from 'src/common/policy/constants/policy.enum.constant';
-import { PolicyAbilityProtected } from 'src/common/policy/decorators/policy.decorator';
 import { PaginationQuery } from 'src/common/pagination/decorators/pagination.decorator';
 import {
     CUSTOMER_DEFAULT_AVAILABLE_ORDER_BY,
@@ -22,7 +24,14 @@ import {
     CUSTOMER_DEFAULT_ORDER_DIRECTION,
     CUSTOMER_DEFAULT_PER_PAGE,
 } from '../constants/customer.list';
-import { CustomerCreateDto } from '../dtos';
+import {
+    CustomerCreateDto,
+    CustomerRequestDto,
+    CustomerUpdateValueDto,
+} from '../dtos';
+import { GetCustomer } from '../decorators/customer.decorator';
+import { RequestParamGuard } from 'src/common/request/decorators/request.decorator';
+import { CustomerAdminUpdateGuard } from '../decorators/customer.admin.decorator';
 
 @ApiTags('modules.admin.customer')
 @Controller({
@@ -36,10 +45,10 @@ export class CustomerAdminController {
     ) {}
 
     @Get('/list')
-    @PolicyAbilityProtected({
-        subject: ENUM_POLICY_SUBJECT.ROLE,
-        action: [ENUM_POLICY_ACTION.READ],
-    })
+    // @PolicyAbilityProtected({
+    //     subject: ENUM_POLICY_SUBJECT.CUSTOMER,
+    //     action: [ENUM_POLICY_ACTION.READ],
+    // })
     @AuthJwtAdminAccessProtected()
     async list(
         @PaginationQuery(
@@ -77,10 +86,6 @@ export class CustomerAdminController {
         };
     }
 
-    @PolicyAbilityProtected({
-        subject: ENUM_POLICY_SUBJECT.USER,
-        action: [ENUM_POLICY_ACTION.READ, ENUM_POLICY_ACTION.CREATE],
-    })
     @AuthJwtAdminAccessProtected()
     @Post('/create')
     async create(@Body() body: CustomerCreateDto): Promise<IResponse> {
@@ -92,8 +97,8 @@ export class CustomerAdminController {
 
         if (exist) {
             throw new ConflictException({
-                // statusCode: ENUM_ROLE_STATUS_CODE_ERROR.ROLE_EXIST_ERROR,
-                message: 'role.error.exist',
+                statusCode: 5003,
+                message: 'customer.error.customerExist',
             });
         }
 
@@ -101,6 +106,22 @@ export class CustomerAdminController {
 
         return {
             data: { _id: create._id },
+        };
+    }
+
+    @CustomerAdminUpdateGuard()
+    @AuthJwtAdminAccessProtected()
+    @RequestParamGuard(CustomerRequestDto)
+    @Put('/update/:customer')
+    async update(
+        @GetCustomer() customer: CustomerDoc,
+        @Body()
+        body: CustomerUpdateValueDto
+    ): Promise<IResponse> {
+        await this.customerService.updateValue(customer, body);
+
+        return {
+            data: { _id: customer._id },
         };
     }
 }
