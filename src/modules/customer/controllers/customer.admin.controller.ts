@@ -31,7 +31,10 @@ import {
 } from '../dtos';
 import { GetCustomer } from '../decorators/customer.decorator';
 import { RequestParamGuard } from 'src/common/request/decorators/request.decorator';
-import { CustomerAdminUpdateGuard } from '../decorators/customer.admin.decorator';
+import {
+    CustomerAdminGetGuard,
+    CustomerAdminUpdateGuard,
+} from '../decorators/customer.admin.decorator';
 
 @ApiTags('modules.admin.customer')
 @Controller({
@@ -84,6 +87,14 @@ export class CustomerAdminController {
             _pagination: { total, totalPage },
             data: customers,
         };
+    }
+
+    @CustomerAdminGetGuard()
+    @AuthJwtAdminAccessProtected()
+    @RequestParamGuard(CustomerRequestDto)
+    @Get('get/:customer')
+    async get(@GetCustomer() customer: CustomerEntity): Promise<IResponse> {
+        return { data: customer };
     }
 
     @AuthJwtAdminAccessProtected()
